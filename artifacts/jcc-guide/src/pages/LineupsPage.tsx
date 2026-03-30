@@ -1,17 +1,16 @@
 import { useState, useMemo } from "react";
 import { allLineups, getTier } from "@/lib/data";
-import { useAppContext } from "@/context/AppContext";
 import { LineupCard } from "@/components/LineupCard";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { Filter, ArrowUpDown } from "lucide-react";
+import { Filter, ArrowUpDown, Search } from "lucide-react";
 
 type SortKey = "pickRate_4" | "pickRate_1" | "avgRanking";
 type TierFilter = "all" | "S" | "A" | "B" | "C";
 
 export default function LineupsPage() {
-  const { globalSearch, setGlobalSearch } = useAppContext();
+  const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("pickRate_4");
   const [isAsc, setIsAsc] = useState(false);
   const [tierFilter, setTierFilter] = useState<TierFilter>("all");
@@ -32,8 +31,8 @@ export default function LineupsPage() {
       data = data.filter((row) => getTier(row) === tierFilter);
     }
 
-    if (globalSearch) {
-      const lowerQ = globalSearch.toLowerCase();
+    if (search) {
+      const lowerQ = search.toLowerCase();
       data = data.filter((row) => {
         const camp = row.extraData.campName || "";
         const pieces = row.pieceList.map((p) => p.pieceName).join("");
@@ -49,7 +48,7 @@ export default function LineupsPage() {
     });
 
     return data;
-  }, [sortKey, isAsc, tierFilter, globalSearch]);
+  }, [sortKey, isAsc, tierFilter, search]);
 
   return (
     <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -66,7 +65,7 @@ export default function LineupsPage() {
               阵容<span className="text-primary">排行榜</span>
             </h2>
             <p className="text-sm text-muted-foreground mt-4 font-medium">
-              基于高段位实际对局统计 · S16 怀旧编年史
+              基于高段位实际对局统计 · S16 英雄联盟传奇赛季
             </p>
           </div>
           
@@ -100,7 +99,7 @@ export default function LineupsPage() {
         <div className="flex flex-col gap-4">
           
           {/* Controls */}
-          <div className="sticky top-20 z-40 bg-background/90 backdrop-blur-md py-3 border-b border-border/50 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className="sticky top-20 z-40 bg-background/90 backdrop-blur-md py-3 border-b border-border/50 flex flex-wrap items-center gap-x-4 gap-y-3">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-muted-foreground" />
               <span className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">排序</span>
@@ -151,7 +150,19 @@ export default function LineupsPage() {
               </div>
             </div>
 
-            <div className="ml-auto text-xs font-medium text-muted-foreground bg-secondary px-3 py-1.5 rounded-lg border border-border">
+            {/* Search */}
+            <div className="relative ml-auto">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="搜索弈子、装备…"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="pl-8 pr-3 py-1.5 bg-secondary/80 border border-border rounded-lg text-xs focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 w-44 transition-all focus:w-56"
+              />
+            </div>
+
+            <div className="text-xs font-medium text-muted-foreground bg-secondary px-3 py-1.5 rounded-lg border border-border">
               共 <span className="text-primary font-bold mx-1">{filteredAndSortedLineups.length}</span> 套
             </div>
           </div>
@@ -179,7 +190,7 @@ export default function LineupsPage() {
                 >
                   <p className="text-muted-foreground">没有找到匹配的阵容</p>
                   <button 
-                    onClick={() => { setGlobalSearch(""); setTierFilter("all"); }}
+                    onClick={() => { setSearch(""); setTierFilter("all"); }}
                     className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
                   >
                     清除过滤条件

@@ -11,10 +11,11 @@ const TIER_STYLES: Record<string, { bg: string; text: string; border: string; la
   C: { bg: "bg-[#4A90E2]/10", text: "text-[#4A90E2]", border: "border-[#4A90E2]/30", label: "一般" },
 };
 
-const COLOR_TYPE_LABELS: Record<number, string> = {
-  1: "金色",
-  2: "银色",
-  3: "铜色",
+// colorType: 1=银色, 2=金色, 3=棱彩色
+const COLOR_TYPE_LABELS: Record<number, { label: string; style: string }> = {
+  1: { label: "银色", style: "bg-slate-100 text-slate-600 border-slate-300" },
+  2: { label: "金色", style: "bg-amber-50 text-amber-700 border-amber-300" },
+  3: { label: "棱彩色", style: "bg-purple-50 text-purple-700 border-purple-300" },
 };
 
 export default function RunesPage() {
@@ -44,13 +45,13 @@ export default function RunesPage() {
               onClick={() => setColorFilter("all")}
               className={cn("px-3 py-1.5 rounded-lg text-xs font-bold transition-all", colorFilter === "all" ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-foreground")}
             >全部</button>
-            {[1, 2, 3].map(ct => (
+            {[2, 1, 3].map(ct => (
               <button
                 key={ct}
                 onClick={() => setColorFilter(ct)}
                 className={cn("px-3 py-1.5 rounded-lg text-xs font-bold transition-all", colorFilter === ct ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-foreground")}
               >
-                {COLOR_TYPE_LABELS[ct]}
+                {COLOR_TYPE_LABELS[ct]?.label}
               </button>
             ))}
           </div>
@@ -75,7 +76,7 @@ export default function RunesPage() {
           const trend = rune.trend;
           const desc = rune.extraData?.desc ?? "";
           const colorType = rune.extraData?.colorType ?? 0;
-          const colorLabel = COLOR_TYPE_LABELS[colorType] ?? "";
+          const colorInfo = COLOR_TYPE_LABELS[colorType];
 
           return (
             <motion.div
@@ -95,16 +96,16 @@ export default function RunesPage() {
               </div>
 
               <div className="flex-1 min-w-0">
-                {/* Name + Tier */}
+                {/* Name + Tier + Color */}
                 <div className="flex items-start justify-between gap-2 mb-1">
                   <h3 className="font-bold text-foreground group-hover:text-primary transition-colors leading-tight line-clamp-2">{rune.name}</h3>
                   <div className="flex flex-col gap-1 items-end shrink-0">
                     <span className={cn("px-2 py-0.5 rounded text-[10px] font-bold border", tierStyle.bg, tierStyle.text, tierStyle.border)}>
                       {tier} {tierStyle.label}
                     </span>
-                    {colorLabel && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-accent text-primary border border-primary/20 font-medium">
-                        {colorLabel}
+                    {colorInfo && (
+                      <span className={cn("text-[9px] px-1.5 py-0.5 rounded border font-medium", colorInfo.style)}>
+                        {colorInfo.label}
                       </span>
                     )}
                   </div>
@@ -116,7 +117,7 @@ export default function RunesPage() {
                 )}
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-1">
+                <div className="grid grid-cols-3 gap-1 mb-2">
                   <div className="text-center bg-secondary rounded px-1 py-1.5">
                     <div className="text-[11px] font-bold text-foreground">{rune.pickRate_4.toFixed(1)}%</div>
                     <div className="text-[9px] text-muted-foreground">前四率</div>
@@ -132,7 +133,7 @@ export default function RunesPage() {
                 </div>
 
                 {/* Trend */}
-                <div className="mt-2 flex items-center gap-1 text-[10px]">
+                <div className="flex items-center gap-1 text-[10px]">
                   {trend > 0 ? (
                     <><TrendingUp className="w-3 h-3 text-green-500" /><span className="text-green-600">上升</span></>
                   ) : trend < 0 ? (

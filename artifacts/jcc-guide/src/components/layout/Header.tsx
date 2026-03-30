@@ -1,7 +1,8 @@
 import { Link, useLocation } from "wouter";
-import { Search, Crown, Users, Hexagon, Sparkles, Sword } from "lucide-react";
-import { useAppContext } from "@/context/AppContext";
+import { Crown, Users, Hexagon, Sparkles, Sword } from "lucide-react";
 import { cn } from "@/lib/utils";
+// @ts-ignore
+import logoImg from "@assets/images_1774863897797.jpeg";
 
 const NAV_ITEMS = [
   { href: "/", label: "阵容排行", icon: Crown },
@@ -13,7 +14,6 @@ const NAV_ITEMS = [
 
 export function Header() {
   const [location] = useLocation();
-  const { globalSearch, setGlobalSearch } = useAppContext();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
@@ -21,8 +21,8 @@ export function Header() {
         
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 shrink-0 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-yellow-300 flex items-center justify-center shadow-lg shadow-primary/20 group-hover:shadow-primary/40 transition-all duration-300">
-            <span className="text-xl">♟</span>
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-primary/20 group-hover:shadow-primary/40 transition-all duration-300">
+            <img src={logoImg} alt="铲铲攻略站" className="w-full h-full object-cover" />
           </div>
           <div className="hidden sm:block">
             <h1 className="font-display text-lg font-bold text-foreground leading-tight tracking-wide">
@@ -57,29 +57,16 @@ export function Header() {
           })}
         </nav>
 
-        {/* Search & Badge */}
-        <div className="flex items-center gap-4 shrink-0 ml-auto">
-          <div className="relative group hidden sm:flex">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-            </div>
-            <input
-              type="text"
-              className="block w-full sm:w-64 pl-10 pr-3 py-2 border border-border rounded-xl leading-5 bg-card/50 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all sm:text-sm"
-              placeholder="搜索弈子、羁绊、装备…"
-              value={globalSearch}
-              onChange={(e) => setGlobalSearch(e.target.value)}
-            />
-          </div>
-          
+        {/* Season Badge */}
+        <div className="flex items-center ml-auto shrink-0">
           <div className="hidden lg:flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-red-950 to-red-900 border border-red-800/50 shadow-inner">
-            <span className="text-xs font-bold text-red-200 tracking-wider">S16 · 怀旧编年史</span>
+            <span className="text-xs font-bold text-red-200 tracking-wider">S16 · 英雄联盟传奇赛季</span>
           </div>
         </div>
       </div>
 
-      {/* Mobile Nav & Search */}
-      <div className="md:hidden px-4 pb-3 flex flex-col gap-3">
+      {/* Mobile Nav */}
+      <div className="md:hidden px-4 pb-3">
         <div className="flex overflow-x-auto no-scrollbar gap-2 pb-1">
           {NAV_ITEMS.map((item) => {
             const isActive = location === item.href;
@@ -96,16 +83,6 @@ export function Header() {
               </Link>
             );
           })}
-        </div>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <input
-            type="text"
-            className="w-full pl-9 pr-4 py-2 bg-card border border-border rounded-lg text-sm focus:outline-none focus:border-primary"
-            placeholder="搜索…"
-            value={globalSearch}
-            onChange={(e) => setGlobalSearch(e.target.value)}
-          />
         </div>
       </div>
     </header>

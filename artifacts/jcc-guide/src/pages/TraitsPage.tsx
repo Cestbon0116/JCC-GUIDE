@@ -11,6 +11,38 @@ const TIER_STYLES: Record<string, { bg: string; text: string; border: string }> 
   C: { bg: "bg-[#4A90E2]/10", text: "text-[#4A90E2]", border: "border-[#4A90E2]/30" },
 };
 
+// Emblem images from 装备排行 转职纹章 data
+const EMBLEM_MAP: Record<string, string> = {
+  "比尔吉沃特": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41601.png",
+  "德玛西亚": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41602.png",
+  "迅击战士": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41621.png",
+  "护卫": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41616.png",
+  "主宰": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41619.png",
+  "弗雷尔卓德": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41603.png",
+  "法师": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41623.png",
+  "斗士": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41614.png",
+  "征服者": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41624.png",
+  "约德尔人": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41612.png",
+  "艾欧尼亚": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41604.png",
+  "诺克萨斯": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41606.png",
+  "以绪塔尔": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41605.png",
+  "皮尔特沃夫": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41607.png",
+  "神盾使": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41625.png",
+  "虚空": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41611.png",
+  "神谕者": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41618.png",
+  "祖安": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41613.png",
+  "枪手": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41617.png",
+  "狙神": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41620.png",
+  "耀光使": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41615.png",
+  "裁决战士": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41622.png",
+};
+
+function getEmblemImg(traitName: string): string | null {
+  // Strip leading number if format is "2 护卫" → "护卫"
+  const key = traitName.replace(/^\d+\s+/, "").trim();
+  return EMBLEM_MAP[key] ?? null;
+}
+
 export default function TraitsPage() {
   const [search, setSearch] = useState("");
 
@@ -45,6 +77,7 @@ export default function TraitsPage() {
           const tierStyle = TIER_STYLES[tier];
           const trend = trait.trend;
           const numList = trait.numList ?? [];
+          const emblemImg = getEmblemImg(trait.name);
 
           return (
             <motion.div 
@@ -55,9 +88,25 @@ export default function TraitsPage() {
               className="bg-card rounded-2xl border border-border p-5 hover:shadow-lg hover:border-primary/30 transition-all duration-300 flex items-start gap-4 group"
             >
               {/* Icon */}
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-secondary to-border border border-border/80 shadow-inner flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:border-primary/40 transition-all duration-300">
-                {trait.img ? (
-                  <img src={trait.img} alt={trait.name} className="w-10 h-10 object-contain" onError={e => (e.currentTarget.style.display = "none")} />
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-secondary to-border border border-border/80 shadow-inner flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:border-primary/40 transition-all duration-300 overflow-hidden">
+                {emblemImg ? (
+                  <img
+                    src={emblemImg}
+                    alt={trait.name}
+                    className="w-full h-full object-cover"
+                    onError={e => {
+                      e.currentTarget.style.display = "none";
+                      const parent = e.currentTarget.parentElement;
+                      if (parent && trait.img) {
+                        const fallback = document.createElement("img");
+                        fallback.src = trait.img;
+                        fallback.className = "w-8 h-8 object-contain";
+                        parent.appendChild(fallback);
+                      }
+                    }}
+                  />
+                ) : trait.img ? (
+                  <img src={trait.img} alt={trait.name} className="w-8 h-8 object-contain" onError={e => (e.currentTarget.style.display = "none")} />
                 ) : (
                   <span className="text-2xl">🔗</span>
                 )}
