@@ -3,7 +3,6 @@ import { allTraits, getTier } from "@/lib/data";
 import { Search, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { getEmblemImg } from "@/lib/emblems";
 
 const TIER_STYLES: Record<string, { bg: string; text: string; border: string }> = {
   S: { bg: "bg-[#FF6B35]/10", text: "text-[#FF6B35]", border: "border-[#FF6B35]/30" },
@@ -16,9 +15,10 @@ export default function TraitsPage() {
   const [search, setSearch] = useState("");
 
   const filteredTraits = useMemo(() => {
-    if (!search) return allTraits;
-    const q = search.toLowerCase();
-    return allTraits.filter(t => t.name.toLowerCase().includes(q));
+    const filtered = !search
+      ? allTraits
+      : allTraits.filter(t => t.name.toLowerCase().includes(search.toLowerCase()));
+    return [...filtered].sort((a, b) => a.name.localeCompare(b.name, "zh-CN"));
   }, [search]);
 
   return (
@@ -46,8 +46,6 @@ export default function TraitsPage() {
           const tierStyle = TIER_STYLES[tier];
           const trend = trait.trend;
           const numList = trait.numList ?? [];
-          const emblemImg = getEmblemImg(trait.name);
-
           return (
             <motion.div 
               key={trait.id}
@@ -58,23 +56,7 @@ export default function TraitsPage() {
             >
               {/* Icon */}
               <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-secondary to-border border border-border/80 shadow-inner flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:border-primary/40 transition-all duration-300 overflow-hidden">
-                {emblemImg ? (
-                  <img
-                    src={emblemImg}
-                    alt={trait.name}
-                    className="w-full h-full object-cover"
-                    onError={e => {
-                      e.currentTarget.style.display = "none";
-                      const parent = e.currentTarget.parentElement;
-                      if (parent && trait.img) {
-                        const fallback = document.createElement("img");
-                        fallback.src = trait.img;
-                        fallback.className = "w-8 h-8 object-contain";
-                        parent.appendChild(fallback);
-                      }
-                    }}
-                  />
-                ) : trait.img ? (
+                {trait.img ? (
                   <img src={trait.img} alt={trait.name} className="w-8 h-8 object-contain" onError={e => (e.currentTarget.style.display = "none")} />
                 ) : (
                   <span className="text-2xl">🔗</span>

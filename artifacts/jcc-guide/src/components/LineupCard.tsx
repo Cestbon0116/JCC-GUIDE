@@ -4,6 +4,10 @@ import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getEmblemImgFromCampName } from "@/lib/emblems";
 
+const URL_OVERRIDES: Record<string, string> = {
+  "0f7e6ac1597f5afec9b9aab1a1f961d9": "https://mp.weixin.qq.com/s/zOmwiF3aZSx2JZwQH6xONQ",
+};
+
 interface LineupCardProps {
   lineup: LineupRow;
   index: number;

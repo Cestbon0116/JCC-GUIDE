@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { allLineups, getTier } from "@/lib/data";
+import { useAppContext } from "@/context/AppContext";
 import { LineupCard } from "@/components/LineupCard";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { cn } from "@/lib/utils";
@@ -10,7 +11,7 @@ type SortKey = "pickRate_4" | "pickRate_1" | "avgRanking";
 type TierFilter = "all" | "S" | "A" | "B" | "C";
 
 export default function LineupsPage() {
-  const [search, setSearch] = useState("");
+  const { globalSearch, setGlobalSearch } = useAppContext();
   const [sortKey, setSortKey] = useState<SortKey>("pickRate_4");
   const [isAsc, setIsAsc] = useState(false);
   const [tierFilter, setTierFilter] = useState<TierFilter>("all");
@@ -31,8 +32,8 @@ export default function LineupsPage() {
       data = data.filter((row) => getTier(row) === tierFilter);
     }
 
-    if (search) {
-      const lowerQ = search.toLowerCase();
+    if (globalSearch) {
+      const lowerQ = globalSearch.toLowerCase();
       data = data.filter((row) => {
         const camp = row.extraData.campName || "";
         const pieces = row.pieceList.map((p) => p.pieceName).join("");
@@ -48,7 +49,7 @@ export default function LineupsPage() {
     });
 
     return data;
-  }, [sortKey, isAsc, tierFilter, search]);
+  }, [sortKey, isAsc, tierFilter, globalSearch]);
 
   return (
     <div className="max-w-[1380px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -99,7 +100,7 @@ export default function LineupsPage() {
         <div className="flex flex-col gap-4">
           
           {/* Controls */}
-          <div className="sticky top-20 z-40 bg-background/90 backdrop-blur-md py-3 border-b border-border/50 flex flex-wrap items-center gap-x-4 gap-y-3">
+          <div className="bg-background/90 py-3 border-b border-border/50 flex flex-wrap items-center gap-x-4 gap-y-3">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-muted-foreground" />
               <span className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">排序</span>
@@ -156,8 +157,8 @@ export default function LineupsPage() {
               <input
                 type="text"
                 placeholder="搜索弈子、装备…"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
+                value={globalSearch}
+                onChange={e => setGlobalSearch(e.target.value)}
                 className="pl-8 pr-3 py-1.5 bg-secondary/80 border border-border rounded-lg text-xs focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 w-44 transition-all focus:w-56"
               />
             </div>
@@ -190,7 +191,7 @@ export default function LineupsPage() {
                 >
                   <p className="text-muted-foreground">没有找到匹配的阵容</p>
                   <button 
-                    onClick={() => { setSearch(""); setTierFilter("all"); }}
+                    onClick={() => { setGlobalSearch(""); setTierFilter("all"); }}
                     className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
                   >
                     清除过滤条件
