@@ -48,6 +48,17 @@ Every package extends `tsconfig.base.json` which sets `composite: true`. The roo
 - `pnpm run build` — runs `typecheck` first, then recursively runs `build` in all packages that define it
 - `pnpm run typecheck` — runs `tsc --build --emitDeclarationOnly` using project references
 
+## Artifacts
+
+### `artifacts/jcc-guide` (`@workspace/jcc-guide`)
+
+金铲铲之战 S16 攻略站 — React + Vite frontend. Fully client-side, no backend needed.
+
+- Data source: `attached_assets/output_1774860524145.json` (lineup ranking data, aid=55)
+- 5 pages: 阵容排行 (/), 弈子排行 (/heroes), 羁绊排行 (/traits), 符文排行 (/runes), 装备库 (/equipment)
+- Light warm gold theme, responsive layout
+- Features: Tier filtering (S/A/B/C), sort by win rate / top-4 / avg rank, keyword search, unit detail sidebar
+
 ## Packages
 
 ### `artifacts/api-server` (`@workspace/api-server`)

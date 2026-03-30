@@ -1,0 +1,11 @@
+packages:
+  "framer-motion": "For smooth layout transitions and beautiful micro-interactions"
+  "clsx": "For conditional class names"
+  "tailwind-merge": "To merge tailwind classes safely"
+
+images: []
+
+notes:
+  - Using local JSON data from @assets/output_1774860524145.json as requested, no external APIs needed.
+  - Assuming the attached assets alias is configured properly in Vite.
+  - Implemented responsive layout with a sticky sidebar on desktop, falling back to a bottom sheet or hidden panels on mobile if needed (kept simple linear flow on mobile).

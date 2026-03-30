@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "金铲铲攻略站 S16"
+version = "1.0.0"
+id = "artifacts/jcc-guide"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18295
+
+[services.development]
+run = "pnpm --filter @workspace/jcc-guide run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/jcc-guide", "run", "build" ]
+publicDir = "artifacts/jcc-guide/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18295"
+BASE_PATH = "/"
