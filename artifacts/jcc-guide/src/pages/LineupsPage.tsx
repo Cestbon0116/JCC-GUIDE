@@ -11,7 +11,7 @@ type SortKey = "pickRate_4" | "pickRate_1" | "avgRanking";
 type TierFilter = "all" | "S" | "A" | "B" | "C";
 
 export default function LineupsPage() {
-  const { globalSearch } = useAppContext();
+  const { globalSearch, setGlobalSearch } = useAppContext();
   const [sortKey, setSortKey] = useState<SortKey>("pickRate_4");
   const [isAsc, setIsAsc] = useState(false);
   const [tierFilter, setTierFilter] = useState<TierFilter>("all");
@@ -21,19 +21,17 @@ export default function LineupsPage() {
       setIsAsc(!isAsc);
     } else {
       setSortKey(key);
-      setIsAsc(key === "avgRanking"); // Default asc for ranking (lower is better)
+      setIsAsc(key === "avgRanking");
     }
   };
 
   const filteredAndSortedLineups = useMemo(() => {
     let data = [...allLineups];
 
-    // Filter by tier
     if (tierFilter !== "all") {
       data = data.filter((row) => getTier(row) === tierFilter);
     }
 
-    // Filter by search term
     if (globalSearch) {
       const lowerQ = globalSearch.toLowerCase();
       data = data.filter((row) => {
@@ -44,7 +42,6 @@ export default function LineupsPage() {
       });
     }
 
-    // Sort
     data.sort((a, b) => {
       const valA = a[sortKey];
       const valB = b[sortKey];
@@ -69,7 +66,7 @@ export default function LineupsPage() {
               阵容<span className="text-primary">排行榜</span>
             </h2>
             <p className="text-sm text-muted-foreground mt-4 font-medium">
-              数据更新: 2026-03-19 07:30 · 基于高段位实际对局统计
+              基于高段位实际对局统计 · S16 怀旧编年史
             </p>
           </div>
           
