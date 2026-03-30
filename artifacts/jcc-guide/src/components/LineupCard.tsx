@@ -2,6 +2,7 @@ import { LineupRow, getTier } from "@/lib/data";
 import { useAppContext } from "@/context/AppContext";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getEmblemImgFromCampName } from "@/lib/emblems";
 
 interface LineupCardProps {
   lineup: LineupRow;
@@ -14,7 +15,6 @@ export function LineupCard({ lineup, index }: LineupCardProps) {
   const extra = lineup.extraData;
   const rankNum = index + 1;
 
-  // Level recommendation logic
   const lv9 = extra.levelRate_9 || 0;
   const lv8 = extra.levelRate_8 || 0;
   const lv7 = extra.levelRate_7 || 0;
@@ -25,6 +25,10 @@ export function LineupCard({ lineup, index }: LineupCardProps) {
   else lvText = `推荐7级成型 ${lv7.toFixed(0)}%`;
 
   const campName = extra.campName ? extra.campName.replace(" && ", " · ") : "未知阵容";
+
+  // Get colored emblem image, fallback to original trait icon
+  const emblemImg = getEmblemImgFromCampName(extra.campName || "");
+  const traitIconSrc = emblemImg || extra.img || null;
 
   const tierColors = {
     S: "from-[#FF6B35] to-[#FF8E63]",
@@ -75,13 +79,20 @@ export function LineupCard({ lineup, index }: LineupCardProps) {
         {/* Title Area */}
         <div className="flex-1 min-w-[200px]">
           <div className="flex items-center gap-2">
-            {extra.img && (
-              <img src={extra.img} alt="Trait" className="w-6 h-6 rounded-md object-cover border border-border bg-secondary" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+            {traitIconSrc && (
+              <div className="w-8 h-8 rounded-md overflow-hidden border border-border bg-secondary shrink-0">
+                <img
+                  src={traitIconSrc}
+                  alt="Trait"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.style.display = "none"; }}
+                />
+              </div>
             )}
             <h3 className="font-display font-bold text-lg text-foreground truncate">{campName}</h3>
           </div>
           <p className="text-xs text-muted-foreground mt-1 truncate">
-            {extra.authorName || "攻略作者"} · {lvText}
+            {lvText}
           </p>
         </div>
 

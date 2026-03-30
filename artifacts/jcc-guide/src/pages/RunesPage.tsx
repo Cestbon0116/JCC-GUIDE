@@ -45,7 +45,7 @@ export default function RunesPage() {
               onClick={() => setColorFilter("all")}
               className={cn("px-3 py-1.5 rounded-lg text-xs font-bold transition-all", colorFilter === "all" ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-foreground")}
             >全部</button>
-            {[2, 1, 3].map(ct => (
+            {[1, 2, 3].map(ct => (
               <button
                 key={ct}
                 onClick={() => setColorFilter(ct)}

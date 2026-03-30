@@ -3,6 +3,7 @@ import { allTraits, getTier } from "@/lib/data";
 import { Search, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { getEmblemImg } from "@/lib/emblems";
 
 const TIER_STYLES: Record<string, { bg: string; text: string; border: string }> = {
   S: { bg: "bg-[#FF6B35]/10", text: "text-[#FF6B35]", border: "border-[#FF6B35]/30" },
@@ -10,38 +11,6 @@ const TIER_STYLES: Record<string, { bg: string; text: string; border: string }> 
   B: { bg: "bg-[#7ED321]/10", text: "text-[#7ED321]", border: "border-[#7ED321]/30" },
   C: { bg: "bg-[#4A90E2]/10", text: "text-[#4A90E2]", border: "border-[#4A90E2]/30" },
 };
-
-// Emblem images from 装备排行 转职纹章 data
-const EMBLEM_MAP: Record<string, string> = {
-  "比尔吉沃特": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41601.png",
-  "德玛西亚": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41602.png",
-  "迅击战士": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41621.png",
-  "护卫": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41616.png",
-  "主宰": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41619.png",
-  "弗雷尔卓德": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41603.png",
-  "法师": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41623.png",
-  "斗士": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41614.png",
-  "征服者": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41624.png",
-  "约德尔人": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41612.png",
-  "艾欧尼亚": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41604.png",
-  "诺克萨斯": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41606.png",
-  "以绪塔尔": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41605.png",
-  "皮尔特沃夫": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41607.png",
-  "神盾使": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41625.png",
-  "虚空": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41611.png",
-  "神谕者": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41618.png",
-  "祖安": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41613.png",
-  "枪手": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41617.png",
-  "狙神": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41620.png",
-  "耀光使": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41615.png",
-  "裁决战士": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41622.png",
-};
-
-function getEmblemImg(traitName: string): string | null {
-  // Strip leading number if format is "2 护卫" → "护卫"
-  const key = traitName.replace(/^\d+\s+/, "").trim();
-  return EMBLEM_MAP[key] ?? null;
-}
 
 export default function TraitsPage() {
   const [search, setSearch] = useState("");
