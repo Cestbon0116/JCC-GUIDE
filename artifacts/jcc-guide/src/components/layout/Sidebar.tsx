@@ -12,7 +12,7 @@ export function Sidebar() {
       
       {/* Search Panel */}
       <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
-        <div className="px-5 py-3.5 bg-secondary/50 border-b border-border flex items-center justify-between">
+        <div className="px-5 py-3.5 bg-secondary/50 border-b border-border flex items-center justify-center">
           <h3 className="font-display font-bold text-sm text-foreground flex items-center gap-2">
             <Search className="w-4 h-4 text-primary" /> 
             关键词检索

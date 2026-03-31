@@ -192,9 +192,9 @@ export function LineupCard({ lineup, index }: LineupCardProps) {
           {lvText}
         </div>
         
-        {extra.campUrl ? (
+        {(URL_OVERRIDES[lineup.groupId] || extra.campUrl) ? (
           <a 
-            href={extra.campUrl} 
+            href={URL_OVERRIDES[lineup.groupId] || extra.campUrl || "#"} 
             target="_blank" 
             rel="noreferrer"
             onClick={(e) => e.stopPropagation()}
