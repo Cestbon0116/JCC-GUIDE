@@ -57,7 +57,7 @@ export default function TraitsPage() {
               {/* Icon */}
               <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-secondary to-border border border-border/80 shadow-inner flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:border-primary/40 transition-all duration-300 overflow-hidden">
                 {trait.img ? (
-                  <img src={trait.img} alt={trait.name} className="w-8 h-8 object-contain" onError={e => (e.currentTarget.style.display = "none")} />
+                  <img src={trait.img} alt={trait.name} className="w-8 h-8 object-contain" style={{ filter: "brightness(0)" }} onError={e => (e.currentTarget.style.display = "none")} />
                 ) : (
                   <span className="text-2xl">🔗</span>
                 )}
